@@ -5,6 +5,7 @@ import com.myblog.myblog.Post.repository.PostRepository;
 import com.myblog.myblog.exception.ResourceNotFoundException;
 import com.myblog.myblog.payload.PostDto;
 import com.myblog.myblog.Post.service.PostService;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,10 +19,13 @@ import java.util.stream.Collectors;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private  final ModelMapper modelMapper;
 
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, ModelMapper modelMapper) {
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
+
 
 
     @Override
@@ -65,19 +69,21 @@ public class PostServiceImpl implements PostService {
         return dtos;
     }
         PostDto  mapToDto(Post post){
-            PostDto dto = new PostDto();
-            dto.setId(post.getId());
-            dto.setTitle(post.getTitle());
-            dto.setDescription(post.getDescription());
-            dto.setContent(post.getContent());
+        PostDto dto = modelMapper.map(post, PostDto.class);
+//            PostDto dto = new PostDto();
+//            dto.setId(post.getId());
+//            dto.setTitle(post.getTitle());
+//            dto.setDescription(post.getDescription());
+//            dto.setContent(post.getContent());
             return dto;
         }
 
     Post mapToEntity(PostDto postDto) {
-        Post post = new Post();
-        post.setTitle(postDto.getTitle());
-        post.setDescription(postDto.getDescription());
-        post.setContent(postDto.getContent());
+        Post post = modelMapper.map(postDto, Post.class);
+//        Post post = new Post();
+//        post.setTitle(postDto.getTitle());
+//        post.setDescription(postDto.getDescription());
+//        post.setContent(postDto.getContent());
         return post;
     }
 }
